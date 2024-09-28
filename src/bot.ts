@@ -29,7 +29,7 @@ export abstract class Bot<OptionsType extends BotOptions> extends EventEmitter {
 
     #state: State = State.IDLE;
 
-    constructor(options?: OptionsType) {
+    protected constructor(options?: OptionsType) {
         super();
     }
 
