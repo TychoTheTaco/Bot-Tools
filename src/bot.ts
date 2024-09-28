@@ -5,17 +5,17 @@ export type BotOptions = { [key: string | symbol]: any }
 type DefaultEventMap = {}
 export type EventMap<T = DefaultEventMap> = Record<keyof T, any[]>
 
-export interface BotEvents {
-    "started": [],
+export interface BotEvents<OptionsType extends BotOptions, B extends Bot<OptionsType>> {
+    "started": [bot: B],
     "stopped": [],
     "error": [data: any]
 }
 
 export declare interface Bot<OptionsType extends BotOptions> {
 
-    emit<E extends keyof BotEvents>(event: E, ...args: BotEvents[E]): boolean;
+    emit<E extends keyof BotEvents<OptionsType, Bot<OptionsType>>>(event: E, ...args: BotEvents<OptionsType, Bot<OptionsType>>[E]): boolean;
 
-    on<E extends keyof BotEvents>(event: E, listener: (...args: BotEvents[E]) => void): this;
+    on<E extends keyof BotEvents<OptionsType, Bot<OptionsType>>>(event: E, listener: (...args: BotEvents<OptionsType, Bot<OptionsType>>[E]) => void): this;
 
 }
 
@@ -43,7 +43,7 @@ export abstract class Bot<OptionsType extends BotOptions> extends EventEmitter {
         this.#state = State.RUNNING;
 
         // Notify listeners
-        this.emit("started");
+        this.emit("started", this);
 
         // Call lifecycle method
         await this.onStart();

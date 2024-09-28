@@ -1,7 +1,7 @@
 import EventEmitter from "node:events";
 import {EventMap} from "../bot";
 
-interface Recipient {
+export interface Recipient {
 
 }
 
@@ -29,28 +29,6 @@ export abstract class Notifier<Events extends EventMap<Events>, RecipientType ex
             }
             emitter.on(event, handler);
         }
-    }
-
-}
-
-export interface DiscordRecipient extends Recipient {
-    webhookUrl: string
-}
-
-export abstract class DiscordNotifier<Events extends EventMap<Events>> extends Notifier<Events, DiscordRecipient> {
-
-    constructor(recipient: DiscordRecipient) {
-        super(recipient);
-    }
-
-    protected async post(data: object) {
-        return fetch(this.recipient.webhookUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        });
     }
 
 }
